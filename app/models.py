@@ -1,5 +1,7 @@
 from flask_sqlalchemy import SQLAlchemy
 
+from db_utils.db_create import get_default_sentence_from_file
+
 db = SQLAlchemy()
 
 
@@ -38,3 +40,15 @@ class DefaultSentence(db.Model):
 
     def __repr__(self):
         return '<User %r>' % self.text
+
+    @staticmethod
+    def create_table():
+        sentences = get_default_sentence_from_file("default_sentence.txt")
+        default_sentence = DefaultSentence.query.all()
+        list_default_text = []
+        if len(default_sentence) != 0:
+            list_default_text = list(map(lambda x: x.text, default_sentence))
+        for sentence in sentences:
+            if sentence not in list_default_text:
+                db.session.add(DefaultSentence(text=sentence))
+        db.session.commit()

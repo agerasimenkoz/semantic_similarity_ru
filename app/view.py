@@ -1,8 +1,10 @@
 from flask import jsonify, request
 from flask_restful import Resource
 
-from models import User, db
-# from app import similarity_factory
+from models import User, db, DefaultSentence
+from similarity.similarity_class import BertSimilarity
+
+
 
 
 class Index(Resource):
@@ -12,11 +14,11 @@ class Index(Resource):
         # db.session.add(new_intent)
         # db.session.commit()
 
-        res = User.query.all()
+        res = DefaultSentence.query.all()
         for user in res:
             ret.append(
                 {
-                    'username': user.username,
+                    'username': user.text,
                 }
             )
         return jsonify(ret, 200)
@@ -32,9 +34,10 @@ class Add(Resource):
         return jsonify([], 200)
 
 
-class HealthCheck(Resource):
+class HealthCheckServ(Resource):
     def get(self):
-        return jsonify([], 200)
+        res = DefaultSentence.query.all()
+        return jsonify([res], 200)
 
 
 class Similarity(Resource):
@@ -43,7 +46,8 @@ class Similarity(Resource):
         text = json_data.get("text", None)
         response = {}
         if text:
-            pass
+            sentence_embedding = BertSimilarity().predict_model(text)
+            response["message"] = f"{sentence_embedding}"
         else:
             response["message"] = "Please add sentence in format text='sentence'"
-            return jsonify(response, 200)
+        return jsonify(response, 200)
