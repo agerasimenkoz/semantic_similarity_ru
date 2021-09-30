@@ -6,7 +6,6 @@ from flask_restful import Api
 from view import Index, Add
 from models import db
 from healthcheck import HealthCheck
-# from serializers import AlchemyEncoder
 from similarity.similarity_class import BertSimilarity
 
 app = Flask(__name__)
@@ -27,7 +26,7 @@ db.init_app(app)
 # health = HealthCheck()
 # # Add a flask route to expose information
 # app.add_url_rule('/healthcheck', 'healthcheck', view_func=lambda: health.check())
-# similarity_factory = BertSimilarity()
+similarity_factory = BertSimilarity()
 
 
 # create the DB on demand

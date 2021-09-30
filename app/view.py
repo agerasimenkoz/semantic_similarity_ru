@@ -32,18 +32,18 @@ class Add(Resource):
         return jsonify([], 200)
 
 
-# class HealthCheck(Resource):
-#     def get(self):
-#         return jsonify([], 200)
-#
-#
-# class Similarity(Resource):
-#     def post(self):
-#         json_data = request.get_json(force=True)
-#         text = json_data.get("text", None)
-#         response = {}
-#         if text:
-#             pass
-#         else:
-#             response["message"] = "Please add sentence in format text='sentence'"
-#             return jsonify(response, 200)
+class HealthCheck(Resource):
+    def get(self):
+        return jsonify([], 200)
+
+
+class Similarity(Resource):
+    def post(self):
+        json_data = request.get_json(force=True)
+        text = json_data.get("text", None)
+        response = {}
+        if text:
+            pass
+        else:
+            response["message"] = "Please add sentence in format text='sentence'"
+            return jsonify(response, 200)
