@@ -26,6 +26,7 @@ class BertSimilarity:
         inputs = self.tokenizer(data, return_tensors="pt").to(self.device)
         outputs = self.model(**inputs)
         self.sentence_embedding = self._mean_pooling(outputs.last_hidden_state, inputs['attention_mask'])
+        return self.sentence_embedding
         # return sentence_embedding.cpu().detach().numpy()[0]
 
     # def similarity_model_processing(self, dataframe_processing, model, tokenizer):

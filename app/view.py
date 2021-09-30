@@ -1,6 +1,7 @@
 from flask import jsonify, request
 from flask_restful import Resource
 
+# from db_utils.db_create import insert_default_sentence
 from models import User, db, DefaultSentence
 from similarity.similarity_class import BertSimilarity
 
@@ -13,7 +14,7 @@ class Index(Resource):
         # new_intent = User(username="test_text")
         # db.session.add(new_intent)
         # db.session.commit()
-
+        # insert_default_sentence()
         res = DefaultSentence.query.all()
         for user in res:
             ret.append(
@@ -46,6 +47,7 @@ class Similarity(Resource):
         text = json_data.get("text", None)
         response = {}
         if text:
+            print(str(text))
             sentence_embedding = BertSimilarity().predict_model(text)
             response["message"] = f"{sentence_embedding}"
         else:
