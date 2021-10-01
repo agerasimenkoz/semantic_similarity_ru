@@ -7,7 +7,7 @@ def main(text):
         'Content-type': 'application/json',
     }
     data = json.dumps({"text": text})
-    response = requests.post('http://localhost:5000/similarity', headers=headers, data=data)
+    response = requests.post('http://localhost:5000/get_intent', headers=headers, data=data)
     return response.json()
 
 

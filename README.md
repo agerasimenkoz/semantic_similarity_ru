@@ -56,7 +56,7 @@ http://localhost:5010/
 ```
 ## Running the tests
 ```
-curl http://localhost:5000/similarity -H "Content-Type: application/json" -d '{"text": "you_sentence"}'
+curl http://localhost:5000/get_intent -H "Content-Type: application/json" -d '{"text": "you_sentence"}'
 ```
 Responce come in the format json as 
 

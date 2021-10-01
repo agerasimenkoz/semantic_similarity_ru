@@ -47,7 +47,7 @@ def create_tables():
 # api.add_resource(Index, '/')
 # api.add_resource(Add, '/add')
 api.add_resource(HealthCheckServ, '/health_check')
-api.add_resource(Similarity, '/similarity')
+api.add_resource(Similarity, '/get_intent')
 
 # if __name__ == '__main__':
 #     app.run(host="0.0.0.0", debug=False)
