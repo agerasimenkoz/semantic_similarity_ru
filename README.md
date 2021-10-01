@@ -41,14 +41,19 @@ docker-compose up --build
 ```
 http://localhost:5000/
 ```
-
+To check the database in the container phpMyAdmin is used at url 
+```
+http://localhost:5010/
+```
+## Running the tests
 ```
 curl http://localhost:5000/similarity -H "Content-Type: application/json" -d '{"text": "you_sentence"}'
-curl -i -X GET -H "Content-Type: application/json" -d "{\"text\":\"привет\"}" http://localhost:5000/similarity
 ```
+Responce come in the format json as 
 
-## Running the tests
+{"message":"message Error","similarity":"max similarity for sentence","text":"the best sentence"}
 
+You can use instead script test_request.py in semantic_similarity_ru folder
 ## Deployment
 
 ## Built With
@@ -59,10 +64,12 @@ curl -i -X GET -H "Content-Type: application/json" -d "{\"text\":\"привет\
 * [pip](https://pypi.org/project/pip/) - Package and dependency manager
 * [MySQL](https://www.mysql.com/) - Database
 
-## Contributing
+## Used Model
+* [DeepPavlov](https://huggingface.co/DeepPavlov/rubert-base-cased-sentence) -  BERT Model
 
-## Versioning
-
+## Improvement
+* Fine-tuning Model
+* Check other metrics
 ## Authors
 
 ## License

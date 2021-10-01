@@ -4,12 +4,9 @@ from flask import Flask
 from flask_restful import Api
 from sqlalchemy import event
 
-# from app.db_utils.db_create import insert_default_sentence
 from db_utils.db_create import insert_default_sentence
 from models import db, DefaultSentence
-# from healthcheck import HealthCheck
 from similarity.similarity_class import BertSimilarity
-# from db_utils.db_create import insert_default_sentence
 from view import Index, Add, HealthCheckServ, Similarity
 
 app = Flask(__name__)
@@ -29,8 +26,7 @@ app.config['MYSQL_CHARSET'] = 'utf8mb4'
 
 # For Unicode in response
 app.config['JSON_AS_ASCII'] = False
-# app.config['SQLALCHEMY_NATIVE_UNICODE'] = False
-# db = SQLAlchemy(app)
+
 db.init_app(app)
 
 # health = HealthCheck()
@@ -45,10 +41,8 @@ db.init_app(app)
 @app.before_first_request
 def create_tables():
     db.create_all()
+    # Initial Default Sentences
     insert_default_sentence()
-
-# DefaultSentence().create_table()
-# insert_default_sentence()
 
 api.add_resource(Index, '/')
 api.add_resource(Add, '/add')

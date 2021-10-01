@@ -52,9 +52,7 @@ class Similarity(Resource):
             dict_default = {}
             for default_sentence in list_default:
                 dict_default[default_sentence.text] = byte_to_numpy(default_sentence.numpy_model)
-            # list_default = list(map(lambda x: byte_to_numpy(x.numpy_model), list_default))
 
-            # print(f"numpy_sentence {sentence_embedding.shape == list_default[0].shape}")
             similarity = cos_similarity_sentences(sentence_embedding, list(dict_default.values()))
             max_similarity = max(similarity)
             index_max_similarity = similarity.index(max(similarity))
@@ -63,4 +61,4 @@ class Similarity(Resource):
             # response["text"] = f"{similarity}"
         else:
             response["message"] = "Please add sentence in format text='sentence'"
-        return make_response(jsonify(response, 200))
+        return make_response(jsonify(response))
