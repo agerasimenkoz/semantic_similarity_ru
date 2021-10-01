@@ -7,7 +7,7 @@ from sqlalchemy import event
 from db_utils.db_create import insert_default_sentence
 from models import db, DefaultSentence
 from similarity.similarity_class import BertSimilarity
-from view import Index, Add, HealthCheckServ, Similarity
+from view import HealthCheckServ, Similarity
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
@@ -44,8 +44,8 @@ def create_tables():
     # Initial Default Sentences
     insert_default_sentence()
 
-api.add_resource(Index, '/')
-api.add_resource(Add, '/add')
+# api.add_resource(Index, '/')
+# api.add_resource(Add, '/add')
 api.add_resource(HealthCheckServ, '/health_check')
 api.add_resource(Similarity, '/similarity')
 

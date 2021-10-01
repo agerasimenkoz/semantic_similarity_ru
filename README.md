@@ -36,11 +36,17 @@ cd semantic_similarity_ru
 docker-compose up --build
 ```
 
-**Step 4:** Open up the browser and paste the below url
+**Step 4:** Check API
 
 ```
-http://localhost:5000/
+http://localhost:5000/health_check
 ```
+or
+```
+curl http://localhost:5000/health_check
+```
+
+
 To check the database in the container phpMyAdmin is used at url 
 ```
 http://localhost:5010/

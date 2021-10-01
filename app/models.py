@@ -1,65 +1,51 @@
 from datetime import datetime
 
 from flask_sqlalchemy import SQLAlchemy
-
-# from db_utils.db_create import get_default_sentence_from_file
-# from db_utils.db_create import get_default_sentence_from_file
-from sqlalchemy import Column, Integer, String, DateTime, Unicode, Text, LargeBinary
+from sqlalchemy import Column, Integer, String, DateTime, Unicode, Text, LargeBinary, Float, ForeignKey, Boolean
 
 db = SQLAlchemy()
 
 
-class User(db.Model):
-    """
-    Create an Employee table
-    """
-    __tablename__ = 'employees'
-    id = Column(Integer, primary_key=True)
-    username = Column(String(80), unique=False)
-
-    def __repr__(self):
-        return '<User %r>' % self.username
-
-
 class SentenceSimilarity(db.Model):
     """
-    Create an Employee table
+    Create an sentence table to store requests
     """
     __tablename__ = 'sentence_similarity'
+    __table_args__ = {'mysql_engine': 'InnoDB', 'mysql_charset': 'utf8', 'mysql_collate': 'utf8_unicode_ci'}
     id = Column(Integer, primary_key=True)
-    text = Column(String(1200), unique=True, nullable=False)
-    similarity = Column(String(1200), unique=True, nullable=False)
+    text = Column(String(1200), nullable=False)
     timestamp = Column(DateTime,
                        default=datetime.utcnow,
                        onupdate=datetime.utcnow)
+    ids_default = db.relationship('DefaultSimilarity', backref='sentence_similar')
 
     def __repr__(self):
         return '<SentenceSimilarity %r>' % self.text
 
 
+class DefaultSimilarity(db.Model):
+    """
+    Create auxiliary table for SentenceSimilarity
+    """
+    __tablename__ = 'default_similarity'
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    id_default = Column(Integer, nullable=False)
+    similarity_val = Column(Float, nullable=False)
+    the_best = Column(Boolean, nullable=True, default=False)
+
+    id_sentence = Column(Integer, ForeignKey('sentence_similarity.id'), nullable=True)
+
+
 class DefaultSentence(db.Model):
     """
-    Create an Employee table
+    Create immutable table with default sentences for compare
     """
     __tablename__ = 'default_sentence'
     __table_args__ = {'mysql_engine': 'InnoDB', 'mysql_charset': 'utf8', 'mysql_collate': 'utf8_unicode_ci'}
 
-    id = Column(Integer, primary_key=True)
+    id = Column(Integer, primary_key=True, index=True)
     text = Column(String(120, collation='utf8_unicode_ci'), unique=True, nullable=False)
     numpy_model = Column(LargeBinary, unique=False, nullable=True)
 
     def __repr__(self):
         return '<DefaultSentence %r>' % self.text
-
-    # @staticmethod
-    # def create_table(*args, **kwargs):
-    #     sentences = get_default_sentence_from_file("default_sentence.txt")
-    #     default_sentence = DefaultSentence.query.all()
-    #     list_default_text = []
-    #     if len(default_sentence) != 0:
-    #         list_default_text = list(map(lambda x: x.text, default_sentence))
-    #     for sentence in sentences:
-    #         print(f"Added {sentence} to default table")
-    #         if sentence not in list_default_text:
-    #             db.session.add(DefaultSentence(text=sentence))
-    #     db.session.commit()
