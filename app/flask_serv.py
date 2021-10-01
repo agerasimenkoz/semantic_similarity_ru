@@ -18,12 +18,18 @@ app.app_context().push()
 
 api = Api(app)
 
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://{}:{}@{}/{}'.format(
+app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://{}:{}@{}/{}?charset=utf8'.format(
     os.getenv('DB_USER', 'flask'),
     os.getenv('DB_PASSWORD', ''),
     os.getenv('DB_HOST', 'mysql'),
     os.getenv('DB_NAME', 'flask')
 )
+app.config['MYSQL_DATABASE_CHARSET'] = 'utf8mb4'
+app.config['MYSQL_CHARSET'] = 'utf8mb4'
+
+# For Unicode in response
+app.config['JSON_AS_ASCII'] = False
+# app.config['SQLALCHEMY_NATIVE_UNICODE'] = False
 # db = SQLAlchemy(app)
 db.init_app(app)
 

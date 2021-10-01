@@ -1,11 +1,13 @@
-from flask import jsonify, request
+import json
+import numpy as np
+
+from flask import jsonify, request, make_response
 from flask_restful import Resource
 
-# from db_utils.db_create import insert_default_sentence
+from similarity.utils import cos_similarity_sentences, byte_to_numpy
+from db_utils.db_create import insert_default_sentence
 from models import User, db, DefaultSentence
-from similarity.similarity_class import BertSimilarity
-
-
+from similarity.similarity_class import BertSimilarity, similarity_factory
 
 
 class Index(Resource):
@@ -18,11 +20,9 @@ class Index(Resource):
         res = DefaultSentence.query.all()
         for user in res:
             ret.append(
-                {
-                    'username': user.text,
-                }
+                {"sentence": json.dumps(user.text, ensure_ascii=False)}
             )
-        return jsonify(ret, 200)
+        return make_response(jsonify(ret, 200))
 
 
 class Add(Resource):
@@ -32,24 +32,35 @@ class Add(Resource):
         db.session.add(new_intent)
         db.session.commit()
 
-        return jsonify([], 200)
+        return make_response(jsonify([], 200))
 
 
 class HealthCheckServ(Resource):
     def get(self):
         res = DefaultSentence.query.all()
-        return jsonify([res], 200)
+        return make_response(jsonify([res], 200))
 
 
 class Similarity(Resource):
     def post(self):
         json_data = request.get_json(force=True)
         text = json_data.get("text", None)
-        response = {}
+        response = {"message": None}
         if text:
-            print(str(text))
-            sentence_embedding = BertSimilarity().predict_model(text)
-            response["message"] = f"{sentence_embedding}"
+            sentence_embedding = similarity_factory.predict_model(text)
+            list_default = DefaultSentence.query.all()
+            dict_default = {}
+            for default_sentence in list_default:
+                dict_default[default_sentence.text] = byte_to_numpy(default_sentence.numpy_model)
+            # list_default = list(map(lambda x: byte_to_numpy(x.numpy_model), list_default))
+
+            # print(f"numpy_sentence {sentence_embedding.shape == list_default[0].shape}")
+            similarity = cos_similarity_sentences(sentence_embedding, list(dict_default.values()))
+            max_similarity = max(similarity)
+            index_max_similarity = similarity.index(max(similarity))
+            response["text"] = f"{list(dict_default.keys())[index_max_similarity]}"
+            response["similarity"] = f"{max_similarity:.2f}"
+            # response["text"] = f"{similarity}"
         else:
             response["message"] = "Please add sentence in format text='sentence'"
-        return jsonify(response, 200)
+        return make_response(jsonify(response, 200))

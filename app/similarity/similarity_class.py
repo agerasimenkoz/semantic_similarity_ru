@@ -26,6 +26,7 @@ class BertSimilarity:
         inputs = self.tokenizer(data, return_tensors="pt").to(self.device)
         outputs = self.model(**inputs)
         self.sentence_embedding = self._mean_pooling(outputs.last_hidden_state, inputs['attention_mask'])
+        self.sentence_embedding = self.sentence_embedding.cpu().detach().numpy()[0]
         return self.sentence_embedding
         # return sentence_embedding.cpu().detach().numpy()[0]
 
@@ -63,4 +64,5 @@ class BertSimilarity:
         sum_mask = torch.clamp(input_mask_expanded.sum(1), min=1e-9)
         return sum_embeddings / sum_mask
 
-
+# Init Model with server
+similarity_factory = BertSimilarity()
