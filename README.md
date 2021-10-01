@@ -43,7 +43,7 @@ http://localhost:5000/
 ```
 
 ```
-curl http://localhost:5000/item -H "Content-Type: application/json" -d '{"text": "you_sentence"}'
+curl http://localhost:5000/similarity -H "Content-Type: application/json" -d '{"text": "you_sentence"}'
 curl -i -X GET -H "Content-Type: application/json" -d "{\"text\":\"привет\"}" http://localhost:5000/similarity
 ```
 

@@ -1,6 +1,11 @@
 import os
+
+import numpy as np
 from models import db, DefaultSentence
 # from app.models import DefaultSentence, db
+from similarity.similarity_class import similarity_factory
+
+from similarity.utils import numpy_to_byte
 
 
 def get_default_sentence_from_file(file_path):
@@ -23,6 +28,10 @@ def insert_default_sentence(*args, **kwargs):
     for sentence in sentences:
         if sentence not in list_default_text:
             print(f"Added {sentence} to default table")
-            db.session.add(DefaultSentence(text=sentence))
+            numpy_sentence = similarity_factory.predict_model(sentence)
+            bytes_array = numpy_to_byte(numpy_sentence)
+            db.session.add(DefaultSentence(text=sentence,
+                                           numpy_model=bytes_array
+                                           )
+                           )
             db.session.commit()
-

@@ -4,7 +4,7 @@ from flask_sqlalchemy import SQLAlchemy
 
 # from db_utils.db_create import get_default_sentence_from_file
 # from db_utils.db_create import get_default_sentence_from_file
-from sqlalchemy import Column, Integer, String, DateTime, Unicode, Text
+from sqlalchemy import Column, Integer, String, DateTime, Unicode, Text, LargeBinary
 
 db = SQLAlchemy()
 
@@ -34,7 +34,7 @@ class SentenceSimilarity(db.Model):
                        onupdate=datetime.utcnow)
 
     def __repr__(self):
-        return '<User %r>' % self.text
+        return '<SentenceSimilarity %r>' % self.text
 
 
 class DefaultSentence(db.Model):
@@ -42,11 +42,14 @@ class DefaultSentence(db.Model):
     Create an Employee table
     """
     __tablename__ = 'default_sentence'
+    __table_args__ = {'mysql_engine': 'InnoDB', 'mysql_charset': 'utf8', 'mysql_collate': 'utf8_unicode_ci'}
+
     id = Column(Integer, primary_key=True)
-    text = Column(String(1200), unique=True, nullable=False)
+    text = Column(String(120, collation='utf8_unicode_ci'), unique=True, nullable=False)
+    numpy_model = Column(LargeBinary, unique=False, nullable=True)
 
     def __repr__(self):
-        return '<User %r>' % self.text
+        return '<DefaultSentence %r>' % self.text
 
     # @staticmethod
     # def create_table(*args, **kwargs):
