@@ -1,12 +1,9 @@
 import os
-import json
 from flask import Flask
 from flask_restful import Api
-from sqlalchemy import event
 
 from db_utils.db_create import insert_default_sentence
-from models import db, DefaultSentence
-from similarity.similarity_class import BertSimilarity
+from models import db
 from view import HealthCheckServ, Similarity
 
 app = Flask(__name__)
@@ -29,13 +26,6 @@ app.config['JSON_AS_ASCII'] = False
 
 db.init_app(app)
 
-# health = HealthCheck()
-# # Add a flask route to expose information
-# app.add_url_rule('/healthcheck', 'healthcheck', view_func=lambda: health.check())
-# similarity_factory = BertSimilarity()
-
-# Initial Default Sentences
-# event.listen(DefaultSentence.__table__, 'after_create', DefaultSentence.create_table)
 
 # create the DB on demand
 @app.before_first_request
@@ -44,10 +34,6 @@ def create_tables():
     # Initial Default Sentences
     insert_default_sentence()
 
-# api.add_resource(Index, '/')
-# api.add_resource(Add, '/add')
+
 api.add_resource(HealthCheckServ, '/health_check')
 api.add_resource(Similarity, '/get_intent')
-
-# if __name__ == '__main__':
-#     app.run(host="0.0.0.0", debug=False)

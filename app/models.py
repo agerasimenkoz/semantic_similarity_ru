@@ -1,7 +1,7 @@
 from datetime import datetime
 
 from flask_sqlalchemy import SQLAlchemy
-from sqlalchemy import Column, Integer, String, DateTime, Unicode, Text, LargeBinary, Float, ForeignKey, Boolean
+from sqlalchemy import Column, Integer, String, DateTime, LargeBinary, Float, ForeignKey, Boolean
 
 db = SQLAlchemy()
 

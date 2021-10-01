@@ -1,4 +1,3 @@
-# from torch.nn.functional import cosine_similarity
 from typing import List
 import numpy as np
 from io import BytesIO

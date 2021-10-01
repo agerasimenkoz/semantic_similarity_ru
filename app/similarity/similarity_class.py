@@ -28,33 +28,6 @@ class BertSimilarity:
         self.sentence_embedding = self._mean_pooling(outputs.last_hidden_state, inputs['attention_mask'])
         self.sentence_embedding = self.sentence_embedding.cpu().detach().numpy()[0]
         return self.sentence_embedding
-        # return sentence_embedding.cpu().detach().numpy()[0]
-
-    # def similarity_model_processing(self, dataframe_processing, model, tokenizer):
-    #     result_model = np.array([], dtype=np.float32)
-    #     time_check = datetime.now()
-    #     num_bad_similarity = 0
-    #     for i, list_sentence in enumerate(dataframe_processing):
-    #         sentence_embeddings = []
-    #         for sentence in list_sentence:
-    #             sentence_embeddings.append(predict_model(sentence, model, tokenizer))
-    #         if (i % 100 == 0):
-    #             print(f"complete {i} row")
-    #         if len(sentence_embeddings) >= 2:
-    #             similarity = cosine_similarity(
-    #                 [sentence_embeddings[0]],
-    #                 sentence_embeddings[1:]
-    #             )[0]
-    #             if similarity.mean() < 0.5:
-    #                 num_bad_similarity += 1
-    #                 print(f"""
-    #               Similarity for {i} sentence = {similarity.mean()} \n
-    #               {".| ".join(list_sentence)}
-    #               """
-    #                       )
-    #             result_model = np.concatenate((result_model, similarity))
-    #     print(f"Time complete {datetime.now() - time_check}")
-    #     return result_model, num_bad_similarity / dataframe_processing.shape[0]
 
     # Mean Pooling - Take attention mask into account for correct averaging
     @staticmethod

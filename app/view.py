@@ -1,16 +1,11 @@
-import json
-import numpy as np
-
 from flask import jsonify, request, make_response
 from flask_restful import Resource
 
 from db_utils.utils import write_sentence_similarities_to_db
 from similarity.utils import cos_similarity_sentences, byte_to_numpy
-from db_utils.db_create import insert_default_sentence
 from db_utils.health_check import check_db, check_model
-from models import db, DefaultSentence
-from similarity.similarity_class import BertSimilarity, similarity_factory
-from sqlalchemy.sql import text
+from models import DefaultSentence
+from similarity.similarity_class import similarity_factory
 
 
 class HealthCheckServ(Resource):
@@ -19,7 +14,6 @@ class HealthCheckServ(Resource):
         try:
             check_db()
             check_model()
-            # db.session.query("1").from_statement(text("SELECT 1")).all()
             response["message"] = "API work"
         except Exception:
             response["message"] = "API don't work! Something is broken"
@@ -54,7 +48,6 @@ class Similarity(Resource):
 
             response["text"] = f"{list(dict_default.keys())[index_max_similarity]}"
             response["similarity"] = f"{max_similarity:.2f}"
-            # response["text"] = f"{similarity}"
         else:
             response["message"] = "Please add sentence in format text='sentence'"
         return make_response(jsonify(response))

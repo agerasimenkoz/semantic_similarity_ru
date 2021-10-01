@@ -1,8 +1,6 @@
 import os
 
-import numpy as np
 from models import db, DefaultSentence
-# from app.models import DefaultSentence, db
 from similarity.similarity_class import similarity_factory
 
 from similarity.utils import numpy_to_byte
